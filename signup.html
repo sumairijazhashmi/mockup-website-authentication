@@ -36,22 +36,61 @@
     </form>
   </main>
 
- <script>
+<script>
   const form = document.getElementById('signupForm');
+
+  function isValidEmail(email) {
+    // must contain @ and end with common TLDs
+    const emailRegex = /^[^\s@]+@[^\s@]+\.(com|net|org|edu|co|io|gov|pk)$/i;
+    return emailRegex.test(email);
+  }
+
+  function isValidPassword(password) {
+    // minimum 8 characters, one uppercase, one lowercase, one digit
+    const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;
+    return passRegex.test(password);
+  }
+
   form.addEventListener('submit', e => {
     e.preventDefault();
-    const [email, password, confirm] = form.querySelectorAll('input');
-    if (password.value !== confirm.value) {
+    const [emailInput, passwordInput, confirmInput] = form.querySelectorAll('input');
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    const confirm = confirmInput.value;
+
+    // Email validation
+    if (!isValidEmail(email)) {
+      alert("Please enter a valid email (must include '@' and end with .com, .edu, .org, etc.)");
+      return;
+    }
+
+    // Password validation
+    if (!isValidPassword(password)) {
+      alert("Password must be at least 8 characters long and include one uppercase letter, one lowercase letter, and one number.");
+      return;
+    }
+
+    // Confirm password match
+    if (password !== confirm) {
       alert('Passwords do not match.');
       return;
     }
 
+    // Check if user already exists
+    const existingEmail = localStorage.getItem('userEmail');
+    if (existingEmail && existingEmail === email) {
+      alert('An account with this email already exists. Please log in instead.');
+      window.location.href = 'index.html';
+      return;
+    }
+
     // Store credentials
-    localStorage.setItem('userEmail', email.value);
-    localStorage.setItem('userPassword', password.value);
+    localStorage.setItem('userEmail', email);
+    localStorage.setItem('userPassword', password);
 
     window.location.href = 'index.html';
   });
 </script>
+
 </body>
 </html>
