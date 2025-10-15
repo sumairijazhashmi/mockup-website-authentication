@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#f9f9fc] flex flex-col items-center justify-center min-h-screen text-gray-900">
+
+  <header class="w-full flex justify-between items-center px-4 py-3">
+    <div class="flex items-center space-x-2">
+      <div class="rounded-full bg-blue-600 w-6 h-6 flex items-center justify-center text-white font-bold">P</div>
+      <span class="font-semibold text-gray-700">Passkeys.io</span>
+      <span class="text-sm text-gray-500">by HANKO</span>
+    </div>
+    <a href="index.html" class="text-gray-600 text-2xl font-bold">&#10005;</a>
+  </header>
+
+  <main class="w-full max-w-sm bg-white p-6 rounded-xl shadow-sm">
+    <h1 class="text-2xl font-semibold mb-4">Create account</h1>
+
+    <form id="signupForm" class="flex flex-col space-y-4">
+      <input type="email" placeholder="Email" class="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      <input type="password" placeholder="Password" class="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+      <input type="password" placeholder="Confirm password" class="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+
+      <button type="submit" class="bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition">
+        Create Account
+      </button>
+
+      <p class="text-center text-sm text-gray-600">
+        Already have an account? 
+        <a href="index.html" class="text-blue-600 hover:underline font-medium">Sign in</a>
+      </p>
+    </form>
+  </main>
+
+ <script>
+  const form = document.getElementById('signupForm');
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const [email, password, confirm] = form.querySelectorAll('input');
+    if (password.value !== confirm.value) {
+      alert('Passwords do not match.');
+      return;
+    }
+
+    // Store credentials
+    localStorage.setItem('userEmail', email.value);
+    localStorage.setItem('userPassword', password.value);
+
+    window.location.href = 'index.html';
+  });
+</script>
+</body>
+</html>
