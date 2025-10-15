@@ -13,7 +13,7 @@
     <div class="flex items-center space-x-2">
       <div class="rounded-full bg-blue-600 w-6 h-6 flex items-center justify-center text-white font-bold">P</div>
       <span class="font-semibold text-gray-700">Passwords Mockup</span>
-      <!-- <span class="text-sm text-gray-500">by HANKO</span> -->
+      <span class="text-sm text-gray-500">by Sumair & Taha</span>
     </div>
     <button class="text-gray-600 text-2xl font-bold">&#9776;</button>
   </header>
@@ -44,6 +44,9 @@
         required 
       >
 
+      <!-- Error / Success Message -->
+      <p id="errorMsg" class="text-red-600 text-sm h-5 text-center"></p>
+
       <!-- Continue button -->
       <button 
         type="submit" 
@@ -51,19 +54,19 @@
         Continue
       </button>
 
-      <!-- Divider -->
+      <!-- Divider
       <div class="flex items-center justify-center space-x-2 text-gray-400 text-sm">
         <span class="w-1/5 border-b"></span>
         <span>or</span>
         <span class="w-1/5 border-b"></span>
       </div>
 
-      <!-- Passkey button -->
+       Passkey button -->
       <!-- <button 
         type="button" 
         class="border border-gray-300 rounded-lg py-3 hover:bg-gray-50 transition">
         Sign in with a passkey
-      </button> -->
+      </button>  -->
 
       <!-- Link to sign up -->
       <p class="text-center text-sm text-gray-600">
@@ -79,23 +82,71 @@
   </main>
 
   <!-- JS -->
-<script>
-  const form = document.getElementById('loginForm');
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    const email = form.querySelector('input[type="email"]').value;
-    const password = form.querySelector('input[type="password"]').value;
+  <script>
+    const form = document.getElementById('loginForm');
+    const errorMsg = document.getElementById('errorMsg');
 
-    const storedEmail = localStorage.getItem('userEmail');
-    const storedPassword = localStorage.getItem('userPassword');
-
-    if (email === storedEmail && password === storedPassword) {
-      localStorage.setItem('isLoggedIn', 'true');
-      window.location.href = 'account.html';
-    } else {
-      alert('Invalid email or password');
+    function showError(message) {
+      errorMsg.textContent = message;
+      errorMsg.classList.remove('text-green-600');
+      errorMsg.classList.add('text-red-600');
     }
-  });
-</script>
+
+    function showSuccess(message) {
+      errorMsg.textContent = message;
+      errorMsg.classList.remove('text-red-600');
+      errorMsg.classList.add('text-green-600');
+    }
+
+    function clearError() {
+      errorMsg.textContent = '';
+    }
+
+    function isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.(com|net|org|edu|co|io|gov|pk)$/i;
+      return emailRegex.test(email);
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      clearError();
+
+      const email = form.querySelector('input[type="email"]').value.trim();
+      const password = form.querySelector('input[type="password"]').value;
+
+      const storedEmail = localStorage.getItem('userEmail');
+      const storedPassword = localStorage.getItem('userPassword');
+
+      // Validate input
+      if (!email || !password) {
+        showError('Please enter both email and password.');
+        return;
+      }
+
+      if (!isValidEmail(email)) {
+        showError('Enter a valid email (e.g., name@example.com or ending with .com/.edu).');
+        return;
+      }
+
+      // Check credentials
+      if (email === storedEmail && password === storedPassword) {
+        localStorage.setItem('isLoggedIn', 'true');
+        showSuccess('✅ Login successful! Redirecting...');
+        setTimeout(() => window.location.href = 'account.html', 1200);
+      } else {
+        showError('Invalid email or password.');
+      }
+    });
+
+    // Clear error when typing
+    form.querySelectorAll('input').forEach(input => {
+      input.addEventListener('input', clearError);
+    });
+
+    // Auto-redirect if already logged in
+    if (localStorage.getItem('isLoggedIn') === 'true') {
+      window.location.href = 'account.html';
+    }
+  </script>
 </body>
 </html>
